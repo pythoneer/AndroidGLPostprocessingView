@@ -1,4 +1,4 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
@@ -8,6 +8,8 @@ import android.view.Display;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.self.viewtoglrendering.R;
 
 
 public class MainActivity extends ActionBarActivity {

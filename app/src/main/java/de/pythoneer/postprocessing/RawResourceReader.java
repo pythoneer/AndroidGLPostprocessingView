@@ -1,4 +1,4 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 import java.io.BufferedReader;
 import java.io.IOException;

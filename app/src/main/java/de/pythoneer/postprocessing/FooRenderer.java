@@ -1,8 +1,10 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+
+import com.self.viewtoglrendering.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

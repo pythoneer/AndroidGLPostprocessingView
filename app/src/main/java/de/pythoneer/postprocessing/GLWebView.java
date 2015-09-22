@@ -1,4 +1,4 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,4 +1,4 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 /**
  * Created by user on 5/4/15.

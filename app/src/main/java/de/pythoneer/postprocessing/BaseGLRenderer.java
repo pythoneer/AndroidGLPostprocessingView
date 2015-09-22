@@ -1,4 +1,4 @@
-package com.self.viewtoglrendering;
+package de.pythoneer.postprocessing;
 
 import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
