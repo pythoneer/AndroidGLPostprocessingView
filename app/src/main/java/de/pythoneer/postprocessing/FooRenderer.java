@@ -51,6 +51,8 @@ public class FooRenderer extends BaseGLRenderer {
 
     private int mOffsetHandle;
 
+    private long startTime;
+
     public FooRenderer(Context context, int width, int height) {
 
         super(width, height);
@@ -88,6 +90,8 @@ public class FooRenderer extends BaseGLRenderer {
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mCubeTextureCoordinates.put(cubeTextureCoordinateData).position(0);
 
+
+        startTime = Calendar.getInstance().getTimeInMillis();
     }
 
     protected String getVertexShader()
@@ -140,13 +144,20 @@ public class FooRenderer extends BaseGLRenderer {
         mPositionHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_Position");
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_TexCoordinate");
 
-        mOffsetHandle = GLES20.glGetUniformLocation(mProgramHandle, "offset");
 
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,  getGLSurfaceTexture());
+
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, getGLSurfaceTexture());
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        float timeOffset = Calendar.getInstance().getTimeInMillis();
+        mOffsetHandle = GLES20.glGetUniformLocation(mProgramHandle, "offset");
+        double timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+
+        if(timeInMs > 10000) {
+            startTime = Calendar.getInstance().getTimeInMillis();
+        }
+
+        float timeOffset = (float)(timeInMs / 1000.0f * 2f * 3.14159f * .75f);
 
         GLES20.glUniform1f(mOffsetHandle, timeOffset);
 
