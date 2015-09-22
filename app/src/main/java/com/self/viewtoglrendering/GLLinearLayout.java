@@ -1,4 +1,4 @@
-package lordnaikon.de.glpostprocessingview;
+package com.self.viewtoglrendering;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,38 +8,31 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 /**
- * Created by naikon on 20.09.15.
+ * Created by user on 3/15/15.
  */
-public class GlLinearLayout extends LinearLayout implements GlRenderable {
+public class GLLinearLayout extends LinearLayout implements GLRenderable {
 
-    private GlViewRenderer glViewRenderer;
+    private BaseGLRenderer mBaseGLRenderer;
 
     // default constructors
 
-    public GlLinearLayout(Context context) {
+    public GLLinearLayout(Context context) {
         super(context);
-        setWillNotDraw(false);
     }
 
-    public GlLinearLayout(Context context, AttributeSet attrs) {
+    public GLLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setWillNotDraw(false);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public GlLinearLayout(Context context, AttributeSet attrs, int defStyle) {
+    public GLLinearLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        setWillNotDraw(false);
     }
 
     // drawing magic
     @Override
     public void draw(Canvas canvas) {
-//        super.draw(canvas);
-        System.out.println("LL draw");
-        Canvas glAttachedCanvas = glViewRenderer.onDrawViewBegin();
+        Canvas glAttachedCanvas = mBaseGLRenderer.onDrawViewBegin();
         if(glAttachedCanvas != null) {
             //prescale canvas to make sure content fits
             float xScale = glAttachedCanvas.getWidth() / (float)canvas.getWidth();
@@ -48,11 +41,10 @@ public class GlLinearLayout extends LinearLayout implements GlRenderable {
             super.draw(glAttachedCanvas);
         }
         // notify the canvas is updated
-        glViewRenderer.onDrawViewEnd();
+        mBaseGLRenderer.onDrawViewEnd();
     }
 
-    @Override
-    public void setViewToRenderer(GlViewRenderer viewToRenderer) {
-        glViewRenderer = viewToRenderer;
+    public void setViewToGLRenderer(BaseGLRenderer baseGLRenderer){
+        mBaseGLRenderer = baseGLRenderer;
     }
 }

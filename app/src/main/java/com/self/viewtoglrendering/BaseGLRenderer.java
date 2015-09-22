@@ -1,4 +1,4 @@
-package lordnaikon.de.glpostprocessingview;
+package com.self.viewtoglrendering;
 
 import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
@@ -13,18 +13,14 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by naikon on 20.09.15.
+ * Created by user on 3/12/15.
  */
-//public class GlViewRenderer {
-//}
+public class BaseGLRenderer implements GLSurfaceView.Renderer {
 
+    private static final String TAG = BaseGLRenderer.class.getSimpleName();
 
-public class GlViewRenderer implements GLSurfaceView.Renderer {
-
-    private static final String TAG = GlViewRenderer.class.getSimpleName();
-
-    private static final int DEFAULT_TEXTURE_WIDTH = 500;
-    private static final int DEFAULT_TEXTURE_HEIGHT = 500;
+//    private static final int DEFAULT_TEXTURE_WIDTH = 500;
+//    private static final int DEFAULT_TEXTURE_HEIGHT = 500;
 
     private SurfaceTexture mSurfaceTexture;
     private Surface mSurface;
@@ -32,30 +28,34 @@ public class GlViewRenderer implements GLSurfaceView.Renderer {
     private int mGlSurfaceTexture;
     private Canvas mSurfaceCanvas;
 
-    private int mTextureWidth = DEFAULT_TEXTURE_WIDTH;
-    private int mTextureHeight = DEFAULT_TEXTURE_HEIGHT;
+//    private int mTextureWidth = DEFAULT_TEXTURE_WIDTH;
+//    private int mTextureHeight = DEFAULT_TEXTURE_HEIGHT;
 
+    private int mTextureWidth;
+    private int mTextureHeight;
+
+
+    public BaseGLRenderer(int mTextureWidth, int mTextureHeight) {
+        this.mTextureWidth = mTextureWidth;
+        this.mTextureHeight = mTextureHeight;
+    }
 
     @Override
     public void onDrawFrame(GL10 gl){
         synchronized (this){
-            // update texture
             mSurfaceTexture.updateTexImage();
         }
-    }
+   }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height){
         releaseSurface();
         mGlSurfaceTexture = createTexture();
         if (mGlSurfaceTexture > 0){
-            //attach the texture to a surface.
-            //It's a clue class for rendering an android view to gl level
             mSurfaceTexture = new SurfaceTexture(mGlSurfaceTexture);
             mSurfaceTexture.setDefaultBufferSize(mTextureWidth, mTextureHeight);
             mSurface = new Surface(mSurfaceTexture);
         }
-
     }
 
     public void releaseSurface(){
@@ -80,7 +80,6 @@ public class GlViewRenderer implements GLSurfaceView.Renderer {
     private int createTexture(){
         int[] textures = new int[1];
 
-        // Generate the texture to where android view will be rendered
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glGenTextures(1, textures, 0);
         checkGlError("Texture generate");
