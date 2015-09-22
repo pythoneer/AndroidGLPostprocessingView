@@ -9,6 +9,7 @@ import com.self.viewtoglrendering.R;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Calendar;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -47,6 +48,8 @@ public class FooRenderer extends BaseGLRenderer {
     private int mProgramHandle;
 
     private Context mContext;
+
+    private int mOffsetHandle;
 
     public FooRenderer(Context context, int width, int height) {
 
@@ -137,10 +140,15 @@ public class FooRenderer extends BaseGLRenderer {
         mPositionHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_Position");
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_TexCoordinate");
 
+        mOffsetHandle = GLES20.glGetUniformLocation(mProgramHandle, "offset");
 
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,  getGLSurfaceTexture());
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
+
+        float timeOffset = Calendar.getInstance().getTimeInMillis();
+
+        GLES20.glUniform1f(mOffsetHandle, timeOffset);
 
         drawCube();
 

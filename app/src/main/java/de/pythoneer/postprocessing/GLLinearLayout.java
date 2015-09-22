@@ -32,6 +32,7 @@ public class GLLinearLayout extends LinearLayout implements GLRenderable {
     // drawing magic
     @Override
     public void draw(Canvas canvas) {
+//        super.draw(canvas);
         Canvas glAttachedCanvas = mBaseGLRenderer.onDrawViewBegin();
         if(glAttachedCanvas != null) {
             //prescale canvas to make sure content fits
