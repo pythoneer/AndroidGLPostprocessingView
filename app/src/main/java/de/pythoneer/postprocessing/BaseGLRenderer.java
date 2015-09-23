@@ -19,17 +19,11 @@ public class BaseGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = BaseGLRenderer.class.getSimpleName();
 
-//    private static final int DEFAULT_TEXTURE_WIDTH = 500;
-//    private static final int DEFAULT_TEXTURE_HEIGHT = 500;
-
     private SurfaceTexture mSurfaceTexture;
     private Surface mSurface;
 
     private int mGlSurfaceTexture;
     private Canvas mSurfaceCanvas;
-
-//    private int mTextureWidth = DEFAULT_TEXTURE_WIDTH;
-//    private int mTextureHeight = DEFAULT_TEXTURE_HEIGHT;
 
     private int mTextureWidth;
     private int mTextureHeight;
@@ -40,12 +34,14 @@ public class BaseGLRenderer implements GLSurfaceView.Renderer {
         this.mTextureHeight = mTextureHeight;
     }
 
+
     @Override
     public void onDrawFrame(GL10 gl){
         synchronized (this){
             mSurfaceTexture.updateTexImage();
         }
-   }
+    }
+
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height){
@@ -58,6 +54,7 @@ public class BaseGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+
     public void releaseSurface(){
         if(mSurface != null){
             mSurface.release();
@@ -69,6 +66,7 @@ public class BaseGLRenderer implements GLSurfaceView.Renderer {
         mSurfaceTexture = null;
 
     }
+
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config){
@@ -98,7 +96,6 @@ public class BaseGLRenderer implements GLSurfaceView.Renderer {
     public int getGLSurfaceTexture(){
         return mGlSurfaceTexture;
     }
-
 
 
     public Canvas onDrawViewBegin(){

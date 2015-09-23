@@ -17,40 +17,23 @@ import javax.microedition.khronos.opengles.GL10;
 public class FooRenderer extends BaseGLRenderer {
 
 
-    /** Store our model data in a float buffer. */
     private final FloatBuffer mCubePositions;
-
     private final FloatBuffer mCubeTextureCoordinates;
 
-    /** This will be used to pass in the texture. */
     private int mTextureUniformHandle;
-
-    /** This will be used to pass in model position information. */
     private int mPositionHandle;
-
-    /** This will be used to pass in model texture coordinate information. */
     private int mTextureCoordinateHandle;
 
-    /** How many bytes per float. */
-    private final int mBytesPerFloat = 4;
-
-    /** Size of the position data in elements. */
-    private final int mPositionDataSize = 3;
-
-
-    /** Size of the texture coordinate data in elements. */
-    private final int mTextureCoordinateDataSize = 2;
-
-    /** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
-    private final float[] mLightPosInEyeSpace = new float[4];
-
-    /** This is a handle to our cube shading program. */
     private int mProgramHandle;
-
-    private Context mContext;
-
+    private int mOtherProgramHandle;
     private int mOffsetHandle;
 
+    private final int mBytesPerFloat = 4;
+    private final int mPositionDataSize = 3;
+    private final int mTextureCoordinateDataSize = 2;
+
+    public boolean otherProgram = false;
+    private Context mContext;
     private long startTime;
 
     public FooRenderer(Context context, int width, int height) {
@@ -81,15 +64,11 @@ public class FooRenderer extends BaseGLRenderer {
                         1.0f, 0.0f,
                 };
 
-        // Initialize the buffers.
-        mCubePositions = ByteBuffer.allocateDirect(cubePositionData.length * mBytesPerFloat)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubePositions = ByteBuffer.allocateDirect(cubePositionData.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         mCubePositions.put(cubePositionData).position(0);
 
-        mCubeTextureCoordinates = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * mBytesPerFloat)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubeTextureCoordinates = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         mCubeTextureCoordinates.put(cubeTextureCoordinateData).position(0);
-
 
         startTime = Calendar.getInstance().getTimeInMillis();
     }
@@ -117,9 +96,16 @@ public class FooRenderer extends BaseGLRenderer {
         final int vertexShaderHandle = ShaderHelper.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);
         final int fragmentShaderHandle = ShaderHelper.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);
 
-        mProgramHandle = ShaderHelper.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle,
-                new String[] {"a_Position", "a_TexCoordinate"});
+        mProgramHandle = ShaderHelper.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, new String[] {"a_Position", "a_TexCoordinate"});
 
+
+        final String vertexShader2 = RawResourceReader.readTextFileFromRawResource(mContext, R.raw.vertex_shader);
+        final String fragmentShader2 = RawResourceReader.readTextFileFromRawResource(mContext, R.raw.wobble_fragment_shader);
+
+        final int vertexShaderHandle2 = ShaderHelper.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader2);
+        final int fragmentShaderHandle2 = ShaderHelper.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader2);
+
+        mOtherProgramHandle = ShaderHelper.createAndLinkProgram(vertexShaderHandle2, fragmentShaderHandle2, new String[] {"a_Position", "a_TexCoordinate"});
 
     }
 
@@ -135,31 +121,32 @@ public class FooRenderer extends BaseGLRenderer {
         // GL Draw code onwards
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        // Set our per-vertex lighting program.
-        GLES20.glUseProgram(mProgramHandle);
 
+        final int currentProgramHandle = otherProgram ? mOtherProgramHandle : mProgramHandle;
 
-//        // Set program handles for cube drawing.
-        mTextureUniformHandle = GLES20.glGetUniformLocation(mProgramHandle, "u_Texture");
-        mPositionHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_Position");
-        mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgramHandle, "a_TexCoordinate");
+        GLES20.glUseProgram(currentProgramHandle);
 
-
+        mTextureUniformHandle = GLES20.glGetUniformLocation(currentProgramHandle, "u_Texture");
+        mPositionHandle = GLES20.glGetAttribLocation(currentProgramHandle, "a_Position");
+        mTextureCoordinateHandle = GLES20.glGetAttribLocation(currentProgramHandle, "a_TexCoordinate");
 
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, getGLSurfaceTexture());
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        mOffsetHandle = GLES20.glGetUniformLocation(mProgramHandle, "offset");
-        double timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+        mOffsetHandle = GLES20.glGetUniformLocation(currentProgramHandle, "offset");
 
-        if(timeInMs > 10000) {
-            startTime = Calendar.getInstance().getTimeInMillis();
+        if(mOffsetHandle != -1) {
+            double timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+
+            if(timeInMs > 10000) {
+                startTime = Calendar.getInstance().getTimeInMillis();
+            }
+
+            float timeOffset = (float)(timeInMs / 1000.0f * 2f * 3.14159f * .75f);
+
+            GLES20.glUniform1f(mOffsetHandle, timeOffset);
         }
-
-        float timeOffset = (float)(timeInMs / 1000.0f * 2f * 3.14159f * .75f);
-
-        GLES20.glUniform1f(mOffsetHandle, timeOffset);
 
         drawCube();
 

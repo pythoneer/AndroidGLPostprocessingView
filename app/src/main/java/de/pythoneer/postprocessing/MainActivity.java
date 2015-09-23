@@ -2,6 +2,7 @@ package de.pythoneer.postprocessing;
 
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -33,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
         int width = size.x;
         int height = size.y;
 
-        BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height);
+        final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height);
 
         mGLSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
         mGLLinearLayout = (GLRenderable) findViewById(R.id.gl_layout);
@@ -47,6 +48,18 @@ public class MainActivity extends ActionBarActivity {
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.loadUrl("http://www.golem.de");
+
+
+
+        final Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((FooRenderer) baseGlRenderer).otherProgram = !((FooRenderer) baseGlRenderer).otherProgram;
+                h.postDelayed(this, 5000);
+            }
+        }, 5000);
+
     }
 
 
