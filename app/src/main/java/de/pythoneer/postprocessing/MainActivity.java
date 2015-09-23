@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
     private GLRenderable mGLLinearLayout;
     private WebView mWebView;
 
+    private int currentEffect = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,8 @@ public class MainActivity extends ActionBarActivity {
         int width = size.x;
         int height = size.y;
 
-        List<EffectItem> effects = Arrays.asList((EffectItem)new WobbleEffect());
+        final List<EffectItem> effects = Arrays.asList((EffectItem)new WobbleEffect(),
+                (EffectItem)new PixelateEffect());
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
 
@@ -60,9 +63,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void run() {
 //                ((FooRenderer) baseGlRenderer).otherProgram = !((FooRenderer) baseGlRenderer).otherProgram;
-//                h.postDelayed(this, 5000);
 
-                ((FooRenderer) baseGlRenderer).currentEffect = 0;
+
+                final int setEffect = (currentEffect++) % effects.size();
+                ((FooRenderer) baseGlRenderer).currentEffect = setEffect;
+
+                h.postDelayed(this, 5000);
             }
         }, 5000);
 

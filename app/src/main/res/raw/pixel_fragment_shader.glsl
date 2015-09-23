@@ -1,3 +1,5 @@
+
+
 precision mediump float;
 
 // important to include in order to use rendered Android View to gl texture
@@ -6,8 +8,9 @@ uniform samplerExternalOES u_Texture;
 
 varying vec2 v_TexCoordinate;
 
-void main()                    		
+void main()
 {
-    gl_FragColor = texture2D(u_Texture, v_TexCoordinate);
+    int si = int(v_TexCoordinate.s * 150.0);
+    int sj = int(v_TexCoordinate.t * 150.0);
+    gl_FragColor = texture2D(u_Texture, vec2(float(si) / 150.0, float(sj) / 150.0)) ;
 }
-
