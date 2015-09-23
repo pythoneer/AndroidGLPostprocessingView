@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -36,9 +37,15 @@ public class FooRenderer extends BaseGLRenderer {
     private Context mContext;
     private long startTime;
 
-    public FooRenderer(Context context, int width, int height) {
+    private List<EffectItem> effectItemList;
+
+    public int currentEffect = -1;
+
+    public FooRenderer(Context context, int width, int height, List<EffectItem> effectItemList) {
 
         super(width, height);
+
+        this.effectItemList = effectItemList;
 
         mContext = context;
         final float[] cubePositionData =
@@ -107,6 +114,13 @@ public class FooRenderer extends BaseGLRenderer {
 
         mOtherProgramHandle = ShaderHelper.createAndLinkProgram(vertexShaderHandle2, fragmentShaderHandle2, new String[] {"a_Position", "a_TexCoordinate"});
 
+
+        for(EffectItem item: effectItemList) {
+
+            item.init(mContext);
+
+        }
+
     }
 
     @Override
@@ -122,7 +136,7 @@ public class FooRenderer extends BaseGLRenderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
 
-        final int currentProgramHandle = otherProgram ? mOtherProgramHandle : mProgramHandle;
+        final int currentProgramHandle = (currentEffect == -1) ? mProgramHandle : effectItemList.get(currentEffect).getProgramHandle();
 
         GLES20.glUseProgram(currentProgramHandle);
 
@@ -134,18 +148,22 @@ public class FooRenderer extends BaseGLRenderer {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        mOffsetHandle = GLES20.glGetUniformLocation(currentProgramHandle, "offset");
+//        mOffsetHandle = GLES20.glGetUniformLocation(currentProgramHandle, "offset");
+//
+//        if(mOffsetHandle != -1) {
+//            double timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+//
+//            if(timeInMs > 10000) {
+//                startTime = Calendar.getInstance().getTimeInMillis();
+//            }
+//
+//            float timeOffset = (float)(timeInMs / 1000.0f * 2f * 3.14159f * .75f);
+//
+//            GLES20.glUniform1f(mOffsetHandle, timeOffset);
+//        }
 
-        if(mOffsetHandle != -1) {
-            double timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
-
-            if(timeInMs > 10000) {
-                startTime = Calendar.getInstance().getTimeInMillis();
-            }
-
-            float timeOffset = (float)(timeInMs / 1000.0f * 2f * 3.14159f * .75f);
-
-            GLES20.glUniform1f(mOffsetHandle, timeOffset);
+        if(currentEffect != -1) {
+            effectItemList.get(currentEffect).draw(currentProgramHandle);
         }
 
         drawCube();

@@ -12,6 +12,9 @@ import android.webkit.WebViewClient;
 
 import com.self.viewtoglrendering.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,7 +37,9 @@ public class MainActivity extends ActionBarActivity {
         int width = size.x;
         int height = size.y;
 
-        final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height);
+        List<EffectItem> effects = Arrays.asList((EffectItem)new WobbleEffect());
+
+        final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
 
         mGLSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
         mGLLinearLayout = (GLRenderable) findViewById(R.id.gl_layout);
@@ -50,13 +55,14 @@ public class MainActivity extends ActionBarActivity {
         mWebView.loadUrl("http://www.golem.de");
 
 
-
         final Handler h = new Handler();
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ((FooRenderer) baseGlRenderer).otherProgram = !((FooRenderer) baseGlRenderer).otherProgram;
-                h.postDelayed(this, 5000);
+//                ((FooRenderer) baseGlRenderer).otherProgram = !((FooRenderer) baseGlRenderer).otherProgram;
+//                h.postDelayed(this, 5000);
+
+                ((FooRenderer) baseGlRenderer).currentEffect = 0;
             }
         }, 5000);
 
