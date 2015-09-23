@@ -39,8 +39,12 @@ public class MainActivity extends ActionBarActivity {
         int width = size.x;
         int height = size.y;
 
-        final List<EffectItem> effects = Arrays.asList((EffectItem)new WobbleEffect(),
-                (EffectItem)new PixelateEffect());
+        final List<EffectItem> effects = Arrays.asList(
+                new WobbleEffect(),
+                new PixelateEffect(),
+                new InvertEffect(),
+                new SimpleScanLineEffect()
+        );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
 
