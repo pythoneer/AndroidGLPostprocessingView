@@ -1,10 +1,12 @@
-package de.pythoneer.postprocessing;
+package de.pythoneer.postprocessing.effects;
 
 import android.opengl.GLES20;
 
 import com.self.viewtoglrendering.R;
 
 import java.util.Calendar;
+
+import de.pythoneer.postprocessing.EffectItem;
 
 /**
  * Created by dustin on 23.09.15.

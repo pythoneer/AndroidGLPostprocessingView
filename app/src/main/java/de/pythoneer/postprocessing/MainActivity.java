@@ -15,6 +15,15 @@ import com.self.viewtoglrendering.R;
 import java.util.Arrays;
 import java.util.List;
 
+import de.pythoneer.postprocessing.effects.CrtOneEffect;
+import de.pythoneer.postprocessing.effects.DigitalGlitch;
+import de.pythoneer.postprocessing.effects.InvertEffect;
+import de.pythoneer.postprocessing.effects.PixelateEffect;
+import de.pythoneer.postprocessing.effects.RgbShiftEffect;
+import de.pythoneer.postprocessing.effects.SimpleScanLineEffect;
+import de.pythoneer.postprocessing.effects.VhsEffect;
+import de.pythoneer.postprocessing.effects.WobbleEffect;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -40,10 +49,14 @@ public class MainActivity extends ActionBarActivity {
         int height = size.y;
 
         final List<EffectItem> effects = Arrays.asList(
-                new WobbleEffect(),
-                new PixelateEffect(),
-                new InvertEffect(),
-                new SimpleScanLineEffect()
+                new WobbleEffect(),             // 0
+                new PixelateEffect(),           // 1
+                new InvertEffect(),             // 2
+                new SimpleScanLineEffect()  ,   // 3
+                new CrtOneEffect(),             // 4
+                new RgbShiftEffect(),           // 5
+                new DigitalGlitch(),            // 6
+                new VhsEffect()                 // 7
         );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
