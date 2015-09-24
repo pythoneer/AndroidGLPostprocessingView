@@ -89,12 +89,12 @@ public class MainActivity extends ActionBarActivity {
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final int setEffect = 10;//(currentEffect++) % effects.size();
+                final int setEffect = (currentEffect++) % effects.size();
                 ((FooRenderer) baseGlRenderer).currentEffect = setEffect;
 
-//                h.postDelayed(this, 8000);
+                h.postDelayed(this, 8000);
             }
-        }, 1000);
+        }, 8000);
 
     }
 

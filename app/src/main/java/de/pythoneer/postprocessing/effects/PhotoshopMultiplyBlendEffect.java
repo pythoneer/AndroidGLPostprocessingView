@@ -1,6 +1,7 @@
 package de.pythoneer.postprocessing.effects;
 
 import android.graphics.Rect;
+import android.opengl.GLES20;
 
 import com.self.viewtoglrendering.R;
 
@@ -28,7 +29,17 @@ public class PhotoshopMultiplyBlendEffect extends EffectItem {
     @Override
     public void draw(int programHandle) {
 
+        int timeHandle = GLES20.glGetUniformLocation(programHandle, "u_GlobalTime");
 
+        if(timeHandle != -1) {
+            float timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+
+            if(timeInMs > 20000) {
+                startTime = Calendar.getInstance().getTimeInMillis();
+            }
+
+            GLES20.glUniform1f(timeHandle, timeInMs / 100);
+        }
 
     }
 }
