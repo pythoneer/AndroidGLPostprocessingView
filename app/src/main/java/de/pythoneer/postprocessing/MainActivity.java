@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,8 +21,10 @@ import de.pythoneer.postprocessing.effects.DigitalGlitch;
 import de.pythoneer.postprocessing.effects.InvertEffect;
 import de.pythoneer.postprocessing.effects.PixelateEffect;
 import de.pythoneer.postprocessing.effects.RgbShiftEffect;
+import de.pythoneer.postprocessing.effects.RippleEffect;
 import de.pythoneer.postprocessing.effects.SimpleScanLineEffect;
 import de.pythoneer.postprocessing.effects.VhsEffect;
+import de.pythoneer.postprocessing.effects.VhsNextEffect;
 import de.pythoneer.postprocessing.effects.WobbleEffect;
 
 
@@ -32,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private WebView mWebView;
 
     private int currentEffect = 0;
+    private RippleEffect rippleEffect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,8 @@ public class MainActivity extends ActionBarActivity {
         int width = size.x;
         int height = size.y;
 
+        rippleEffect = new RippleEffect(true);
+
         final List<EffectItem> effects = Arrays.asList(
                 new WobbleEffect(),             // 0
                 new PixelateEffect(),           // 1
@@ -56,7 +62,9 @@ public class MainActivity extends ActionBarActivity {
                 new CrtOneEffect(),             // 4
                 new RgbShiftEffect(),           // 5
                 new DigitalGlitch(),            // 6
-                new VhsEffect()                 // 7
+                new VhsEffect()    ,            // 7
+                new VhsNextEffect(),            // 8
+                rippleEffect                    // 9
         );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
@@ -79,17 +87,41 @@ public class MainActivity extends ActionBarActivity {
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ((FooRenderer) baseGlRenderer).otherProgram = !((FooRenderer) baseGlRenderer).otherProgram;
-
-
                 final int setEffect = (currentEffect++) % effects.size();
                 ((FooRenderer) baseGlRenderer).currentEffect = setEffect;
 
-                h.postDelayed(this, 5000);
+                h.postDelayed(this, 8000);
             }
-        }, 5000);
+        }, 8000);
 
     }
 
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+//        return super.onTouchEvent(event);
+//
+//        super.onTouchEvent(event);
+
+
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+
+        System.out.println("ON TOUCH " + x + " " + y);
+        rippleEffect.onTuch(x,y);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                System.out.println("DOWN at: " + x + " " + y);
+//                rippleEffect.onTuch(x,y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+
+        return super.onTouchEvent(event);
+
+    }
 }
