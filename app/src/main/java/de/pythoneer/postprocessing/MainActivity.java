@@ -19,6 +19,7 @@ import java.util.List;
 import de.pythoneer.postprocessing.effects.CrtOneEffect;
 import de.pythoneer.postprocessing.effects.DigitalGlitch;
 import de.pythoneer.postprocessing.effects.InvertEffect;
+import de.pythoneer.postprocessing.effects.PhotoshopMultiplyBlendEffect;
 import de.pythoneer.postprocessing.effects.PixelateEffect;
 import de.pythoneer.postprocessing.effects.RgbShiftEffect;
 import de.pythoneer.postprocessing.effects.RippleEffect;
@@ -55,16 +56,17 @@ public class MainActivity extends ActionBarActivity {
         rippleEffect = new RippleEffect(true);
 
         final List<EffectItem> effects = Arrays.asList(
-                new WobbleEffect(),             // 0
-                new PixelateEffect(),           // 1
-                new InvertEffect(),             // 2
-                new SimpleScanLineEffect()  ,   // 3
-                new CrtOneEffect(),             // 4
-                new RgbShiftEffect(),           // 5
-                new DigitalGlitch(),            // 6
-                new VhsEffect()    ,            // 7
-                new VhsNextEffect(),            // 8
-                rippleEffect                    // 9
+                new WobbleEffect(),                     // 0
+                new PixelateEffect(),                   // 1
+                new InvertEffect(),                     // 2
+                new SimpleScanLineEffect(),             // 3
+                new CrtOneEffect(),                     // 4
+                new RgbShiftEffect(),                   // 5
+                new DigitalGlitch(),                    // 6
+                new VhsEffect()    ,                    // 7
+                new VhsNextEffect(),                    // 8
+                rippleEffect,                           // 9
+                new PhotoshopMultiplyBlendEffect()      // 10
         );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
@@ -87,12 +89,12 @@ public class MainActivity extends ActionBarActivity {
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final int setEffect = (currentEffect++) % effects.size();
+                final int setEffect = 10;//(currentEffect++) % effects.size();
                 ((FooRenderer) baseGlRenderer).currentEffect = setEffect;
 
-                h.postDelayed(this, 8000);
+//                h.postDelayed(this, 8000);
             }
-        }, 8000);
+        }, 1000);
 
     }
 
@@ -108,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
         int y = (int)event.getY();
 
         System.out.println("ON TOUCH " + x + " " + y);
-        rippleEffect.onTuch(x,y);
+        rippleEffect.onTuch(x, y);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

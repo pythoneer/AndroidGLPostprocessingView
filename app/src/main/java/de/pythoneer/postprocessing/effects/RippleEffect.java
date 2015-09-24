@@ -30,9 +30,9 @@ public class RippleEffect extends EffectItem {
                 @Override
                 public void run() {
                     onTuch(r.nextInt(800), r.nextInt(1280));
-                    h.postDelayed(this, 2000);
+                    h.postDelayed(this, 2500);
                 }
-            }, 2000);
+            }, 2500);
 
         }
     }
