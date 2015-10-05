@@ -2,6 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/holo_red_dark"
                 tools:context=".MainActivity">
 
     <android.opengl.GLSurfaceView
@@ -17,10 +18,10 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hallo Gregor"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Hallo Gregor"/>-->
 
         <WebView
             android:id="@+id/web_view"

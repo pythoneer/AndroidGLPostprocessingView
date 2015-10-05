@@ -1,7 +1,7 @@
+#extension GL_OES_EGL_image_external : require
 precision mediump float;
 
 // important to include in order to use rendered Android View to gl texture
-#extension GL_OES_EGL_image_external : require
 uniform samplerExternalOES u_Texture;
 
 uniform float u_GlobalTime;
@@ -38,19 +38,20 @@ void main()
 
         color *= tmpColor;
 
-        float strength = 80.0;
-
-        float x = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (u_GlobalTime * 10.0);
-        vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
-
-        if(abs(uv.x - 0.5) < 0.002)
-            color = vec4(0.0);
-
-        grain = 1.0 - grain;
-		color = color * grain;
+//        float strength = 80.0;
+//
+//        float x = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (u_GlobalTime * 10.0);
+//        vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
+//
+//        if(abs(uv.x - 0.5) < 0.002)
+//            color = vec4(0.0);
+//
+//        grain = 1.0 - grain;
+//		color = color * grain;
 
 
     }
+
 
     if(uv.x > 0.4 && uv.x < 0.7 && uv.y > 0.5 && uv.y < 0.7)  {
         vec4 color2 = vec4(1.0, 0.0, 0.0, 1.0);

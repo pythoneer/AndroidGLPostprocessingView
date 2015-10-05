@@ -24,6 +24,8 @@ public class FooRenderer extends BaseGLRenderer {
     private int mTextureUniformHandle;
     private int mPositionHandle;
     private int mTextureCoordinateHandle;
+    private int mResolutionHandle;
+    private int mTimeHandle;
 
     private int mProgramHandle;
     private int mOtherProgramHandle;
@@ -36,6 +38,9 @@ public class FooRenderer extends BaseGLRenderer {
     public boolean otherProgram = false;
     private Context mContext;
     private long startTime;
+
+    private int width;
+    private int height;
 
     private List<EffectItem> effectItemList;
 
@@ -94,8 +99,8 @@ public class FooRenderer extends BaseGLRenderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         super.onSurfaceCreated(gl, config);
-        // Set the background clear color to black.
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        GLES20.glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
         final String vertexShader = getVertexShader();
         final String fragmentShader = getFragmentShader();
@@ -127,6 +132,10 @@ public class FooRenderer extends BaseGLRenderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         super.onSurfaceChanged(gl, width, height);
         GLES20.glViewport(0, 0, width, height);
+        this.width = width;
+        this.height = height;
+
+        System.out.println("surface changed");
     }
 
     @Override
@@ -141,12 +150,24 @@ public class FooRenderer extends BaseGLRenderer {
         GLES20.glUseProgram(currentProgramHandle);
 
         mTextureUniformHandle = GLES20.glGetUniformLocation(currentProgramHandle, "u_Texture");
+        mTimeHandle = GLES20.glGetUniformLocation(currentProgramHandle, "u_GlobalTime");
+        mResolutionHandle = GLES20.glGetUniformLocation(currentProgramHandle, "u_Resolution");
+
         mPositionHandle = GLES20.glGetAttribLocation(currentProgramHandle, "a_Position");
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(currentProgramHandle, "a_TexCoordinate");
 
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, getGLSurfaceTexture());
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
+
+        float timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+
+        if(timeInMs > 20000) {
+            startTime = Calendar.getInstance().getTimeInMillis();
+        }
+
+        GLES20.glUniform2f(mResolutionHandle, (float)width, (float)height);
+        GLES20.glUniform1f(mTimeHandle, timeInMs / 1000);
 
 //        mOffsetHandle = GLES20.glGetUniformLocation(currentProgramHandle, "offset");
 //
@@ -177,14 +198,12 @@ public class FooRenderer extends BaseGLRenderer {
     {
         // Pass in the position information
         mCubePositions.position(0);
-        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
-                0, mCubePositions);
+        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false, 0, mCubePositions);
 
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         mCubeTextureCoordinates.position(0);
-        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, mTextureCoordinateDataSize, GLES20.GL_FLOAT, false,
-                0, mCubeTextureCoordinates);
+        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, mTextureCoordinateDataSize, GLES20.GL_FLOAT, false, 0, mCubeTextureCoordinates);
 
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
 

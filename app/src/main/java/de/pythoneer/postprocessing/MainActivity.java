@@ -1,12 +1,14 @@
 package de.pythoneer.postprocessing;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -47,26 +49,40 @@ public class MainActivity extends ActionBarActivity {
     private void initViews() {
         setContentView(R.layout.activity_main);
 
+
+        Rect rectgle= new Rect();
+        Window window= getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
+        int statusBarHeight= 25;//rectgle.top;
+
+        System.out.println("status height: " + statusBarHeight);
+
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        int height = size.y;
+        int height = size.y - statusBarHeight;
 
-        rippleEffect = new RippleEffect(true);
+
+        System.out.println("height:" + height);
+
+//        height = 1280;
+//
+
+        rippleEffect = new RippleEffect(false);
 
         final List<EffectItem> effects = Arrays.asList(
-                new WobbleEffect(),                     // 0
-                new PixelateEffect(),                   // 1
-                new InvertEffect(),                     // 2
-                new SimpleScanLineEffect(),             // 3
-                new CrtOneEffect(),                     // 4
-                new RgbShiftEffect(),                   // 5
-                new DigitalGlitch(),                    // 6
-                new VhsEffect()    ,                    // 7
-                new VhsNextEffect(),                    // 8
-                rippleEffect,                           // 9
-                new PhotoshopMultiplyBlendEffect()      // 10
+//                new WobbleEffect(),                     // 0
+//                new PixelateEffect(),                   // 1
+//                new InvertEffect(),                     // 2
+//                new SimpleScanLineEffect(),             // 3
+//                new CrtOneEffect(),                     // 4
+//                new RgbShiftEffect(),                   // 5
+//                new DigitalGlitch(),                    // 6
+//                new VhsEffect()    ,                    // 7
+//                new VhsNextEffect(),                    // 8
+//                rippleEffect,                           // 9
+                (EffectItem)new PhotoshopMultiplyBlendEffect()      // 10
         );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
@@ -89,12 +105,12 @@ public class MainActivity extends ActionBarActivity {
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final int setEffect = (currentEffect++) % effects.size();
+                final int setEffect = 0;//(currentEffect++) % effects.size();
                 ((FooRenderer) baseGlRenderer).currentEffect = setEffect;
 
-                h.postDelayed(this, 8000);
+//                h.postDelayed(this, 8000);
             }
-        }, 8000);
+        }, 1000);
 
     }
 
@@ -124,6 +140,5 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onTouchEvent(event);
-
     }
 }
