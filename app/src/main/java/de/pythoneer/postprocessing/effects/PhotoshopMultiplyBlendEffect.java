@@ -29,17 +29,17 @@ public class PhotoshopMultiplyBlendEffect extends EffectItem {
     @Override
     public void draw(int programHandle) {
 
-        int timeHandle = GLES20.glGetUniformLocation(programHandle, "u_GlobalTime");
-
-        if(timeHandle != -1) {
-            float timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
-
-            if(timeInMs > 20000) {
-                startTime = Calendar.getInstance().getTimeInMillis();
-            }
-
-            GLES20.glUniform1f(timeHandle, timeInMs / 100);
-        }
+//        int timeHandle = GLES20.glGetUniformLocation(programHandle, "u_GlobalTime");
+//
+//        if(timeHandle != -1) {
+//            float timeInMs = Calendar.getInstance().getTimeInMillis() - startTime;
+//
+//            if(timeInMs > 20000) {
+//                startTime = Calendar.getInstance().getTimeInMillis();
+//            }
+//
+//            GLES20.glUniform1f(timeHandle, timeInMs / 100);
+//        }
 
     }
 }

@@ -43,6 +43,8 @@ public class GLLinearLayout extends LinearLayout implements GLRenderable {
         }
         // notify the canvas is updated
         mBaseGLRenderer.onDrawViewEnd();
+
+        invalidate();
     }
 
     public void setViewToGLRenderer(BaseGLRenderer baseGLRenderer){

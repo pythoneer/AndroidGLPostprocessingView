@@ -23,6 +23,7 @@ import de.pythoneer.postprocessing.effects.DigitalGlitch;
 import de.pythoneer.postprocessing.effects.InvertEffect;
 import de.pythoneer.postprocessing.effects.PhotoshopMultiplyBlendEffect;
 import de.pythoneer.postprocessing.effects.PixelateEffect;
+import de.pythoneer.postprocessing.effects.RectEffect;
 import de.pythoneer.postprocessing.effects.RgbShiftEffect;
 import de.pythoneer.postprocessing.effects.RippleEffect;
 import de.pythoneer.postprocessing.effects.SimpleScanLineEffect;
@@ -39,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
 
     private int currentEffect = 0;
     private RippleEffect rippleEffect;
+    private RectEffect rectEffect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
 //
 
         rippleEffect = new RippleEffect(false);
+        rectEffect = new RectEffect();
 
         final List<EffectItem> effects = Arrays.asList(
 //                new WobbleEffect(),                     // 0
@@ -82,7 +85,8 @@ public class MainActivity extends ActionBarActivity {
 //                new VhsEffect()    ,                    // 7
 //                new VhsNextEffect(),                    // 8
 //                rippleEffect,                           // 9
-                (EffectItem)new PhotoshopMultiplyBlendEffect()      // 10
+//                (EffectItem)new PhotoshopMultiplyBlendEffect()      // 10
+                (EffectItem)rectEffect
         );
 
         final BaseGLRenderer baseGlRenderer = new FooRenderer(this, width, height, effects);
